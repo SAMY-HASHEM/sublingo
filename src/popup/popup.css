@@ -1,0 +1,68 @@
+body {
+  width: 260px;
+  font-family: system-ui, sans-serif;
+  padding: 12px;
+}
+
+h1 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+  width: auto;
+  margin: 0 6px 0 0;
+}
+
+button {
+  width: 100%;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 10px;
+  color: #777;
+  margin: -6px 0 10px;
+  line-height: 1.35;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 12px 0;
+}
+
+#status {
+  font-size: 11px;
+  color: #2a7;
+  min-height: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.row button {
+  flex: 1;
+  width: auto;
+}

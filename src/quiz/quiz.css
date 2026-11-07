@@ -1,0 +1,183 @@
+:root {
+  --bg: #121216;
+  --card: #1d1d24;
+  --text: #f2f2f5;
+  --muted: #9a9aa8;
+  --accent: #f47521;
+  --good: #43b581;
+  --almost: #f0b429;
+  --bad: #e5484d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #2a2a33;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+}
+
+main {
+  max-width: 820px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.word {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.context {
+  font-style: italic;
+  color: #d8d8e2;
+  margin: 0 0 20px;
+}
+
+.context mark {
+  background: rgba(244, 117, 33, 0.35);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 13px;
+}
+
+textarea {
+  width: 100%;
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #3a3a46;
+  background: #15151b;
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #3a3a46;
+  background: #25252e;
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font: inherit;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+
+button.tab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+#result {
+  margin-top: 20px;
+  border-top: 1px solid #2a2a33;
+  padding-top: 16px;
+}
+
+.verdict {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.verdict.good {
+  color: var(--good);
+}
+
+.verdict.almost {
+  color: var(--almost);
+}
+
+.verdict.bad {
+  color: var(--bad);
+}
+
+.solution {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid #2a2a33;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+td.ctx {
+  color: #c8c8d4;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.dots {
+  letter-spacing: 2px;
+  color: var(--accent);
+}

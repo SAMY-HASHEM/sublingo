@@ -1,0 +1,22 @@
+# dependencies / environments (recreate with npm install / uv)
+node_modules/
+.venv/
+asr-helper/.venv/
+__pycache__/
+*.pyc
+
+# build output and signed packages (npm run build / web-ext sign)
+dist/
+packages/
+web-ext-artifacts/
+*.map
+
+# local editor / tool state
+.idea/
+.proxyai/
+.claude/
+.vscode/
+
+# secrets (AMO keys live in ~/.config/sublingo/amo.env, never here)
+.env
+*.env

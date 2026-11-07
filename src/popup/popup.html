@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>SubLingo</h1>
+
+    <label>
+      <input type="checkbox" id="enabled" />
+      Enabled
+    </label>
+
+    <label>
+      Target language
+      <select id="targetLang"></select>
+    </label>
+
+    <label>
+      Dictionary language
+      <select id="glossLang"></select>
+    </label>
+    <label>
+      <input type="checkbox" id="pauseOnHover" />
+      Pause video while hovering words
+    </label>
+    <p class="hint">
+      Hover a subtitle word to see its meaning; click a word for example
+      sentences. Hover 文A for the whole line translated.
+    </p>
+
+    <label>
+      <input type="checkbox" id="quizAfterVideo" />
+      Quiz on starred words after each video
+    </label>
+    <div class="row">
+      <button id="openQuiz" type="button">Start quiz</button>
+      <button id="openList" type="button">Word list <span id="vocabCount"></span></button>
+    </div>
+    <p class="hint">
+      Click a subtitle word and press ☆ to save it to your word list.
+    </p>
+
+    <button id="save">Save</button>
+    <p id="status"></p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

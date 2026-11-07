@@ -1,0 +1,17 @@
+{
+  "name": "sublingo",
+  "version": "0.4.0",
+  "description": "SubLingo — learn languages while watching: subtitle translation, hover dictionary, example sentences.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.0"
+  }
+}

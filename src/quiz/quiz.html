@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>SubLingo – Wortquiz</title>
+    <link rel="stylesheet" href="quiz.css" />
+  </head>
+  <body>
+    <header>
+      <h1>SubLingo</h1>
+      <nav>
+        <button id="tab-quiz" class="tab">Quiz</button>
+        <button id="tab-list" class="tab">Wortliste</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Quiz view -->
+      <section id="view-quiz" hidden>
+        <p id="progress" class="muted"></p>
+
+        <div id="card" class="card" hidden>
+          <div id="word" class="word"></div>
+          <p id="context" class="context"></p>
+          <label for="answer" class="muted">
+            Was bedeutet das? Beschreib es auf Deutsch oder Englisch.
+          </label>
+          <textarea id="answer" rows="2" placeholder="z. B. „busy“ oder „wenn man viel zu tun hat“"></textarea>
+          <div class="row">
+            <button id="check" class="primary">Prüfen</button>
+            <button id="dontknow">Weiß ich nicht</button>
+          </div>
+
+          <div id="result" hidden>
+            <p id="verdict" class="verdict"></p>
+            <p class="muted">Bedeutung:</p>
+            <p id="solution" class="solution"></p>
+            <p id="solution-extra" class="muted small"></p>
+            <div class="row">
+              <button id="override" hidden>Ich lag doch richtig</button>
+              <button id="next" class="primary">Weiter</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="done" class="card" hidden>
+          <p id="summary" class="word"></p>
+          <p class="muted">Die Wörter kommen wieder, bis du sie sicher kannst.</p>
+          <div class="row">
+            <button id="again" class="primary">Noch eine Runde</button>
+            <button id="close">Schließen</button>
+          </div>
+        </div>
+
+        <p id="empty" class="card" hidden>
+          Noch keine Wörter gespeichert. Klick beim Schauen auf ein Wort im
+          Untertitel und dann auf ☆, um es zu speichern.
+        </p>
+
+        <p id="model-status" class="muted small"></p>
+      </section>
+
+      <!-- Word list view -->
+      <section id="view-list" hidden>
+        <p id="list-count" class="muted"></p>
+        <table id="list">
+          <thead>
+            <tr>
+              <th>Wort</th>
+              <th>Bedeutung</th>
+              <th>Satz aus dem Video</th>
+              <th>Fortschritt</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="quiz.js"></script>
+  </body>
+</html>
