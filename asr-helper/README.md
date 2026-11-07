@@ -26,5 +26,10 @@ journalctl --user -u sublingo-asr -f           # live log
 systemctl --user disable --now sublingo-asr    # turn off
 ```
 
-Options: `--lookahead 13` (more accurate, ~1.1 s delay) or `--lookahead 3`
-(faster, less accurate); `--device <source>` to capture a different output.
+Options: `--lookahead 3` (default, ~0.3 s audio chunks), `6` or `13` (more
+context, more delay); `--device <source>` to capture a different output.
+
+Latency: text is sent after every decoded token (not per finished word), so a
+word appears while it's being said rather than once the next word starts.
+On a German test clip this put words on screen ~0.7–1.3 s earlier than the
+first version.

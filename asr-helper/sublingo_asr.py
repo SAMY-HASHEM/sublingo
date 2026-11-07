@@ -104,6 +104,35 @@ class AudioCapture:
             log.info("audio capture stopped")
 
 
+class TokenStreamer:
+    """generate() streamer that reports the full decoded text after every
+    token. (transformers' TextIteratorStreamer only releases a word once the
+    next word starts, which delays the end of every sentence.)"""
+
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+        self.ids: list[int] = []
+        self.q: "queue.Queue[str | None]" = queue.Queue()
+
+    def put(self, value):
+        if hasattr(value, "shape") and len(value.shape) > 1:
+            value = value[0]
+        ids = value.tolist() if hasattr(value, "tolist") else list(value)
+        if isinstance(ids, int):
+            ids = [ids]
+        if not ids:
+            return
+        self.ids.extend(ids)
+        self.q.put(self.tokenizer.decode(self.ids, skip_special_tokens=True))
+
+    def end(self):
+        self.q.put(None)
+
+    def __iter__(self):
+        while (text := self.q.get()) is not None:
+            yield text
+
+
 class Transcriber:
     """Runs the streaming model on live audio and emits subtitle lines."""
 
@@ -157,8 +186,6 @@ class Transcriber:
 
     def _run(self):
         import torch
-        from transformers import TextIteratorStreamer
-
         p = self.processor
         hop = p.feature_extractor.hop_length
         n_fft = p.feature_extractor.n_fft
@@ -209,7 +236,7 @@ class Transcriber:
                         audio = audio[next_start - base:]
                         base = next_start
 
-            streamer = TextIteratorStreamer(p.tokenizer, skip_special_tokens=True, timeout=None)
+            streamer = TokenStreamer(p.tokenizer)
             kwargs = {**first_inputs, "input_features": features(), "streamer": streamer}
 
             def generate():
@@ -223,28 +250,33 @@ class Transcriber:
             gen = threading.Thread(target=generate, daemon=True)
             gen.start()
 
-            line = ""
-            for piece in streamer:
-                if not piece:
-                    continue
-                piece = re.sub(r"<[a-z]{2}-[A-Z]{2}>", "", piece)
+            # `full` is everything decoded this session; the current subtitle
+            # line is full[line_start:]. Lines only break at word boundaries.
+            line_start = 0
+            shown = ""  # raw text of the current line as last sent
+            for full in streamer:
+                full = re.sub(r"\s*<[a-z]{2}-[A-Z]{2}>", "", full)
                 now = time.monotonic()
-                new_line = (
-                    not line
-                    or now - state["last_token"] > GAP_NEW_LINE_S
-                    or re.search(r"[.!?…]\s*$", line)
-                    or len(line) + len(piece) > MAX_LINE_CHARS
-                )
+                gap = now - state["last_token"]
                 state["last_token"] = now
-                if new_line and line:
-                    self.on_line(line.strip(), True)
-                    line = piece.lstrip()
-                else:
-                    line += piece
-                if line.strip():
-                    self.on_line(line.strip(), False)
-            if line.strip():
-                self.on_line(line.strip(), True)
+
+                if shown.strip() and (gap > GAP_NEW_LINE_S or re.search(r"[.!?…]\s*$", shown)):
+                    boundary = line_start + len(shown)
+                    if boundary == len(full) or (boundary < len(full) and full[boundary].isspace()):
+                        self.on_line(shown.strip(), True)
+                        line_start = boundary
+                cur = full[line_start:]
+                if len(cur.strip()) > MAX_LINE_CHARS:
+                    cut = cur.rfind(" ", 0, MAX_LINE_CHARS)
+                    if cut > 0:
+                        self.on_line(cur[:cut].strip(), True)
+                        line_start += cut
+                        cur = full[line_start:]
+                shown = cur
+                if cur.strip():
+                    self.on_line(cur.strip(), False)
+            if shown.strip():
+                self.on_line(shown.strip(), True)
             gen.join()
 
 
@@ -321,8 +353,8 @@ def main():
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--device", default="@DEFAULT_MONITOR@",
                     help="PulseAudio/PipeWire source to capture (default: monitor of default output)")
-    ap.add_argument("--lookahead", type=int, default=6,
-                    help="lookahead tokens (0/1/3/6/13): higher = more accurate, more delay")
+    ap.add_argument("--lookahead", type=int, default=3, choices=[0, 3, 6, 13],
+                    help="lookahead tokens: 3 = ~0.3 s chunks (default), 6/13 = more context, more delay")
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     asyncio.run(Server(args).main())
