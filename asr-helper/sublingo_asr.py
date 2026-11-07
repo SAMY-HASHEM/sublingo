@@ -353,7 +353,7 @@ def main():
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--device", default="@DEFAULT_MONITOR@",
                     help="PulseAudio/PipeWire source to capture (default: monitor of default output)")
-    ap.add_argument("--lookahead", type=int, default=3, choices=[0, 3, 6, 13],
+    ap.add_argument("--lookahead", type=int, default=3, choices=[3, 6, 13],
                     help="lookahead tokens: 3 = ~0.3 s chunks (default), 6/13 = more context, more delay")
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
