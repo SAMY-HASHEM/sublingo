@@ -254,8 +254,14 @@ class Transcriber:
             # line is full[line_start:]. Lines only break at word boundaries.
             line_start = 0
             shown = ""  # raw text of the current line as last sent
+            prev_full = None
             for full in streamer:
                 full = re.sub(r"\s*<[a-z]{2}-[A-Z]{2}>", "", full)
+                # The model reports every decoding step, including blank ones;
+                # only real new text counts (for the gap timer and for sending).
+                if full == prev_full:
+                    continue
+                prev_full = full
                 now = time.monotonic()
                 gap = now - state["last_token"]
                 state["last_token"] = now
